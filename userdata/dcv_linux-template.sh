@@ -75,7 +75,8 @@ password=@=ActiveDirectoryPassword=@
 domain=@=ActiveDirectoryFQN=@
 EOF
 chmod 700 /etc/mount-creds.txt
-sudo mount -t cifs //@=PreferredFileServerIp=@/share --verbose -o sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777 @=WindowsFileSystemMountPoint=@
+echo "//@=PreferredFileServerIp=@/share    @=WindowsFileSystemMountPoint=@  cifs    sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777   0       0" >> /etc/fstab
+mount -a
 #########################################
 
 #Send the signal to the Cloudformation Stack
