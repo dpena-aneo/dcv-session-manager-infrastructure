@@ -14,6 +14,9 @@
 
 import base64
 
+# from aws_cdk import aws_lambda
+# help(aws_lambda.Code)
+
 from aws_cdk import (
     aws_autoscaling as autoscaling,
     aws_ec2 as ec2,
@@ -25,16 +28,18 @@ from aws_cdk import (
     aws_logs as logs,
     aws_certificatemanager as acm,
     aws_s3_assets as assets,
-    core,
+    #core,
 )
-from aws_cdk.core import CustomResource
+#from aws_cdk.core import CustomResource
+from constructs import Construct
+from aws_cdk import Duration, Aws, CustomResource, Stack, CfnOutput
 
 # Class used to build the infrastructure
 
 
-class DcvSessionManagerInfrastructureStack(core.Stack):
+class DcvSessionManagerInfrastructureStack(Stack):
 
-    def __init__(self, scope: core.Construct, construct_id: str, config: list, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, config: list, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # Copy the required files to S3
@@ -102,7 +107,7 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
         asg_dcv_windows.node.add_dependency(asg_enginframe)
 
         # Return the ALB url
-        core.CfnOutput(self, "EnginFramePortalURL",
+        CfnOutput(self, "EnginFramePortalURL",
                        value="https://"+lb_enginframe.load_balancer_dns_name)
 
     # Function to create the ALB
@@ -164,7 +169,7 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
             max_capacity=capacity,
             security_group=security_group,
             signals=autoscaling.Signals.wait_for_count(
-                capacity, timeout=core.Duration.minutes(30)),
+                capacity, timeout=Duration.minutes(30)),
             block_devices=[
                 autoscaling.BlockDevice(
                     device_name=device_name,
@@ -184,8 +189,8 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
         enginframe_userdata = ec2.UserData.for_linux()
         # Change some placeholders inside the userdata of the instances
         data_enginframe_format = str(data_enginframe, 'utf-8').format(arn_secret_password=config['arn_efadmin_password'],
-                                                                      StackName=core.Aws.STACK_NAME,
-                                                                      RegionName=core.Aws.REGION,
+                                                                      StackName=Aws.STACK_NAME,
+                                                                      RegionName=Aws.REGION,
                                                                       ALB_DNS_NAME=lb_enginframe.load_balancer_dns_name,
                                                                       closing_hook=closing_hook.s3_object_url,
                                                                       starting_hook=starting_hook.s3_object_url,
@@ -214,8 +219,8 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
         dcv_linux_userdata = ec2.UserData.for_linux()
         # Change some placeholders inside the userdata of the instances
         data_dcv_linux_format = str(data_dcv_linux, 'utf-8').format(arn_secret_password=config['arn_efadmin_password'],
-                                                                    StackName=core.Aws.STACK_NAME,
-                                                                    RegionName=core.Aws.REGION)
+                                                                    StackName=Aws.STACK_NAME,
+                                                                    RegionName=Aws.REGION)
         # Add the userdata to the instances
         dcv_linux_userdata.add_commands(data_dcv_linux_format)
         # Search for the latest AMIs for the instances
@@ -236,8 +241,8 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
         dcv_windows_userdata = ec2.UserData.for_windows()
         # Change some placeholders inside the userdata of the instances
         data_dcv_windows_format = str(data_dcv_windows, 'utf-8').format(arn_secret_password=config['arn_efadmin_password'],
-                                                                        StackName=core.Aws.STACK_NAME,
-                                                                        RegionName=core.Aws.REGION)
+                                                                        StackName=Aws.STACK_NAME,
+                                                                        RegionName=Aws.REGION)
         # Add the userdata to the instances
         dcv_windows_userdata.add_commands(data_dcv_windows_format)
         # Search for the latest AMIs for the instances
@@ -414,8 +419,8 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
         lambda_cert = _lambda.Function(self, "lambda_create_cert",
                                            runtime=_lambda.Runtime.PYTHON_3_7,
                                            handler="cert.lambda_handler",
-                                           code=_lambda.Code.asset("./lambda"),
-                                           timeout=core.Duration.seconds(600),
+                                           code=_lambda.Code.from_asset("./lambda"),
+                                           timeout=Duration.seconds(600),
                                            role=lambda_role)
 
         lambda_cs = CustomResource(
