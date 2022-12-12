@@ -68,14 +68,14 @@ pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-l
 #########################################
 # Mount windows fileshare
 yum install -y cifs-utils
-mkdir -p /mnt/winshare
+mkdir -p @=WindowsFileSystemMountPoint=@
 cat > /etc/mount-creds.txt << EOF
 username=Admin
-password=test123456!
-domain=hpcshare.capgemini.com
+password=@=ActiveDirectoryPassword=@
+domain=@=ActiveDirectoryFQN=@
 EOF
 chmod 700 /etc/mount-creds.txt
-sudo mount -t cifs //10.1.80.158/share --verbose -o sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777 /mnt/winshare
+sudo mount -t cifs //@=PreferredFileServerIp=@/share --verbose -o sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777 @=WindowsFileSystemMountPoint=@
 #########################################
 
 #Send the signal to the Cloudformation Stack

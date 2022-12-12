@@ -20,24 +20,24 @@ from dcv_session_manager_infrastructure.dcv_session_manager_infrastructure_stack
 
 
 CONFIG = {
-   "region": "eu-west-3", #AWS Region
-   "account": "923712288763",  # AWS account number
+   "region": "{{Region}}", #AWS Region
+   "account": "{{Account}}",  # AWS account number
    "ec2_type_enginframe": "t2.2xlarge", #EnginFrame instance type  
-   "ec2_type_dcv_linux": "g4dn.xlarge", #DCV Linux instance type (x86 instances only) 
-   "ec2_type_dcv_windows": "g4dn.xlarge", #DCV Windows instance type (x86 instances only)
-   "linux_dcv_number": 1, #Number of DCV Linux nodes
-   "windows_dcv_number": 1, #Number of DCV Windows nodes
-   "arn_efadmin_password": "arn:aws:secretsmanager:eu-west-3:923712288763:secret:caphpcdcv-efadmin-secret-yV2DUX", # ARN of the secret that contains the efadmin password
-   "key_name": "caphpcdcv-key", #SSH key name that you already have in your account
+   "ec2_type_dcv_linux": "{{DCVLinuxInstanceType}}", #DCV Linux instance type (x86 instances only) 
+   "ec2_type_dcv_windows": "{{DCVWindowsInstanceType}}", #DCV Windows instance type (x86 instances only)
+   "linux_dcv_number": {{DCVLinuxInstanceNumber}}, #Number of DCV Linux nodes
+   "windows_dcv_number": {{DCVWindowsInstanceNumber}}, #Number of DCV Windows nodes
+   "arn_efadmin_password": "{{EfAdminSecretARN}}", # ARN of the secret that contains the efadmin password
+   "key_name": "{{Ec2Key}}", #SSH key name that you already have in your account
    "ebs_engingframe_size": 50, #EBS size for EnginFrame
    "ebs_dcv_linux_size": 50, #EBS size for DCV linux
    "ebs_dcv_windows_size": 50, #EBS size for DCV windows
-   "vpc_id": "vpc-0b1664ebff48ada8f", # The VPC Id
-   "subnet_id": "subnet-0d92cd6952eb38bec"
+   "vpc_id": "{{VpcId}}", # The VPC Id
+   "subnet_id": "{{PublicSubnet1}}"
 }
 
 app = core.App()
 # Region and Account are required to retrieve the image to use for the instances
-DcvSessionManagerInfrastructureStack(app, "caphpcdcv-enginframe", config=CONFIG, env={"region": CONFIG['region'], "account": CONFIG['account']})
+DcvSessionManagerInfrastructureStack(app, "{{EnvironmentName}}-enginframe", config=CONFIG, env={"region": CONFIG['region'], "account": CONFIG['account']})
 
 app.synth()

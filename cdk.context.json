@@ -1,3 +1,55 @@
 {
-
+  "acknowledged-issue-numbers": [
+    19836
+  ],
+  "availability-zones:account=923712288763:region=eu-west-3": [
+    "eu-west-3a",
+    "eu-west-3b",
+    "eu-west-3c"
+  ],
+  "ami:account=923712288763:filters.image-type.0=machine:filters.name.0=DCV-AmazonLinux2-x86_64-*-NVIDIA-*:filters.state.0=available:owners.0=amazon:region=eu-west-3": "ami-06523baba91bc7a09",
+  "ami:account=923712288763:filters.image-type.0=machine:filters.name.0=DCV-Windows*NVIDIA*:filters.state.0=available:owners.0=amazon:region=eu-west-3": "ami-08d558b5c0b5d9fdc",
+  "vpc-provider:account=923712288763:filter.vpc-id=vpc-0b1664ebff48ada8f:region=eu-west-3:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0b1664ebff48ada8f",
+    "vpcCidrBlock": "10.1.0.0/16",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0d92cd6952eb38bec",
+            "cidr": "10.1.0.0/18",
+            "availabilityZone": "eu-west-3a",
+            "routeTableId": "rtb-02ef7e3f36f4c0779"
+          },
+          {
+            "subnetId": "subnet-04db15d41213fd6cd",
+            "cidr": "10.1.128.0/18",
+            "availabilityZone": "eu-west-3b",
+            "routeTableId": "rtb-02ef7e3f36f4c0779"
+          }
+        ]
+      },
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-0be37ac3631dcb45b",
+            "cidr": "10.1.64.0/18",
+            "availabilityZone": "eu-west-3a",
+            "routeTableId": "rtb-0d619927bbf537d7d"
+          },
+          {
+            "subnetId": "subnet-08e2cb4af057ad70e",
+            "cidr": "10.1.192.0/18",
+            "availabilityZone": "eu-west-3b",
+            "routeTableId": "rtb-0626d6fde2666d3a3"
+          }
+        ]
+      }
+    ]
+  }
 }

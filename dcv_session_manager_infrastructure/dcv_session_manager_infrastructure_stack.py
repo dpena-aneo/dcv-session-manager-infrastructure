@@ -48,14 +48,15 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
             self, "WindowsDesktop", path='scripts/interactive_builtin_windows_desktop.xml')
 
         # VPC creation
-        vpc = ec2.Vpc(self, "VPC",
-                      max_azs=2,
-                      cidr="10.0.0.0/16",
-                      subnet_configuration=[ec2.SubnetConfiguration(
-                          subnet_type=ec2.SubnetType.PUBLIC,
-                          name="Public",
-                          cidr_mask=24
-                      )])
+        # vpc = ec2.Vpc(self, "VPC",
+        #               max_azs=2,
+        #               cidr="10.0.0.0/16",
+        #               subnet_configuration=[ec2.SubnetConfiguration(
+        #                   subnet_type=ec2.SubnetType.PUBLIC,
+        #                   name="Public",
+        #                   cidr_mask=24
+        #               )])
+        vpc = ec2.Vpc.from_lookup(self, "VPC", vpc_id = config['vpc_id'])
 
         # Create ALB
         alb_security_group, lb_enginframe = self.create_alb(vpc)

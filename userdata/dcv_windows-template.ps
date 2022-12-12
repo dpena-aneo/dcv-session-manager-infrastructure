@@ -75,7 +75,7 @@ $ASGLOGICALID = aws ec2 describe-instances --instance-ids $MyInstID.Content --qu
 #########################################
 # Create bat to mount windows fileshare
 New-Item -Path "C:\Users\Administrator\Desktop\MountNetworkDrive.bat"
-Set-Content "C:\Users\Administrator\Desktop\MountNetworkDrive.bat" "net use Z: \\10.1.80.158\share `"test123456!`" /USER:hpcshare.capgemini.com\Admin"
+Set-Content "C:\Users\Administrator\Desktop\MountNetworkDrive.bat" "net use Z: \\@=PreferredFileServerIp=@\share `"@=ActiveDirectoryPassword=@`" /USER:@=ActiveDirectoryFQN=@\Admin"
 #########################################
 
 #Send the signal to the Cloudformation Stack
