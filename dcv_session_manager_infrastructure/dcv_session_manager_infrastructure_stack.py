@@ -201,6 +201,7 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
                                                     storage=ec2.AmazonLinuxStorage.GENERAL_PURPOSE,
                                                     cpu_type=ec2.AmazonLinuxCpuType.X86_64
                                                     )
+
         # EnginFrame instance ASG
         asg_enginframe = self.create_asg("Enginframe", vpc, config['ec2_type_enginframe'], linux_ami_enginframe, enginframe_userdata,
                                          role_ef, config['key_name'], 1, ef_security_group, "/dev/xvda", config['ebs_engingframe_size'])
@@ -219,11 +220,18 @@ class DcvSessionManagerInfrastructureStack(core.Stack):
                                                                     RegionName=core.Aws.REGION)
         # Add the userdata to the instances
         dcv_linux_userdata.add_commands(data_dcv_linux_format)
+
         # Search for the latest AMIs for the instances
-        linux_ami_dcv_linux = ec2.MachineImage.lookup(
-            name="DCV-AmazonLinux2-x86_64-*-NVIDIA-*",
-            owners=["amazon"]
-        )
+        # linux_ami_dcv_linux = ec2.MachineImage.lookup(
+        #     name="DCV-AmazonLinux2-x86_64-*-NVIDIA-*",
+        #     owners=["amazon"]
+        # )
+        linux_ami_dcv_linux = ec2.MachineImage.generic_linux({
+            'eu-west-1': 'ami-05cb7c71df36e9986',
+            'eu-west-2': 'ami-037c8e5dafbfb3f8d',
+            'eu-west-3': 'ami-0f1a0e20e509e20ee',
+        })
+
         # Linux DCV instances ASG
         asg_dcv_linux = self.create_asg("dcv_linux", vpc, config['ec2_type_dcv_linux'], linux_ami_dcv_linux, dcv_linux_userdata,
                                         role_dcv, config['key_name'], config['linux_dcv_number'], dcv_security_group, "/dev/xvda", config['ebs_dcv_linux_size'])

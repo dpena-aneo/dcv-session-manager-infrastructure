@@ -27,7 +27,8 @@ efadmin_password=$(aws secretsmanager get-secret-value --secret-id {arn_secret_p
 printf "$efadmin_password" | passwd efadmin --stdin
 
 #Install some required packages
-yum -y install python2-pip 
+# yum -y install python2-pip 
+apt install -y python2 python-pip
 
 #Retrieve from parameter store the EnginFrame hostname
 ef_hostname=$(aws ssm get-parameter --name EnginFrameHost --output text --query Parameter.Value)
@@ -67,16 +68,16 @@ pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-l
 
 #########################################
 # Mount windows fileshare
-yum install -y cifs-utils
-mkdir -p @=WindowsFileSystemMountPoint=@
-cat > /etc/mount-creds.txt << EOF
-username=Admin
-password=@=ActiveDirectoryPassword=@
-domain=@=ActiveDirectoryFQN=@
-EOF
-chmod 700 /etc/mount-creds.txt
-echo "//@=PreferredFileServerIp=@/share    @=WindowsFileSystemMountPoint=@  cifs    sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777   0       0" >> /etc/fstab
-mount -a
+# yum install -y cifs-utils
+# mkdir -p @=WindowsFileSystemMountPoint=@
+# cat > /etc/mount-creds.txt << EOF
+# username=Admin
+# password=@=ActiveDirectoryPassword=@
+# domain=@=ActiveDirectoryFQN=@
+# EOF
+# chmod 700 /etc/mount-creds.txt
+# echo "//@=PreferredFileServerIp=@/share    @=WindowsFileSystemMountPoint=@  cifs    sec=ntlmsspi,cred=/etc/mount-creds.txt,cache=none,file_mode=0777,dir_mode=0777   0       0" >> /etc/fstab
+# mount -a
 #########################################
 
 #Send the signal to the Cloudformation Stack
